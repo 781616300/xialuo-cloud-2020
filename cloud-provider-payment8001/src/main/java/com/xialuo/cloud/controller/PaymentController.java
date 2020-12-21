@@ -4,6 +4,7 @@ import com.xialuo.cloud.entity.CommonResult;
 import com.xialuo.cloud.entity.Payment;
 import com.xialuo.cloud.service.PaymentService;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -80,15 +81,15 @@ public class PaymentController
     {
         return serverPort;
     }
-//
-//    @GetMapping(value = "/payment/feign/timeout")
-//    public String paymentFeignTimeout()
-//    {
-//        // 业务逻辑处理正确，但是需要耗费3秒钟
-//        try { TimeUnit.SECONDS.sleep(3); } catch (InterruptedException e) { e.printStackTrace(); }
-//        return serverPort;
-//    }
-//
+
+    @GetMapping(value = "/payment/feign/timeout")
+    public String paymentFeignTimeout()
+    {
+        // 业务逻辑处理正确，但是需要耗费3秒钟
+        try { TimeUnit.SECONDS.sleep(3); } catch (InterruptedException e) { e.printStackTrace(); }
+        return serverPort;
+    }
+
 //    @GetMapping("/payment/zipkin")
 //    public String paymentZipkin()
 //    {
