@@ -35,12 +35,12 @@ public class OrderHystirxController
      * 如果8001正常，但是超过我允许的1500毫秒 走80的全局fallback
      **/
     @GetMapping("/consumer/payment/hystrix/timeout/{id}")
-//    @HystrixCommand(fallbackMethod = "paymentTimeOutFallbackMethod",commandProperties = {
-//            @HystrixProperty(name="execution.isolation.thread.timeoutInMilliseconds",value="1500")
-//    })
-    @HystrixCommand(commandProperties = {
-        @HystrixProperty(name="execution.isolation.thread.timeoutInMilliseconds",value="1500")
+    @HystrixCommand(fallbackMethod = "paymentTimeOutFallbackMethod",commandProperties = {
+            @HystrixProperty(name="execution.isolation.thread.timeoutInMilliseconds",value="1500")
     })
+//    @HystrixCommand(commandProperties = {
+//        @HystrixProperty(name="execution.isolation.thread.timeoutInMilliseconds",value="1500")
+//    })
     public String paymentInfo_TimeOut(@PathVariable("id") Integer id)
     {
 //        int age = 10/0;

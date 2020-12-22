@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7576e0b9-c805-416a-bb5d-8a4e1effb80d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/cloud-eureka-server7001/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-eureka-server7001/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cloud-eureka-server7001/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-eureka-server7001/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-consumer-feign-hystrix-order80/src/main/java/com/xialuo/cloud/controller/OrderHystirxController.java" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-consumer-feign-hystrix-order80/src/main/java/com/xialuo/cloud/controller/OrderHystirxController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-consumer-feign-hystrix-order80/target/classes/com/xialuo/cloud/controller/OrderHystirxController.class" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-consumer-feign-hystrix-order80/target/classes/com/xialuo/cloud/controller/OrderHystirxController.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -65,7 +65,7 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/cloud-consumer-hystrix-dashboard9001/src/main/resources" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -82,11 +82,11 @@
       <recent name="com.xialuo.myrule" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/cloud-consumer-hystrix-dashboard9001/src/main/resources" />
       <recent name="$PROJECT_DIR$/cloud-consumer-feign-hystrix-order80/src/main/java/com/xialuo/cloud/service" />
       <recent name="$PROJECT_DIR$/cloud-consumer-feign-hystrix-order80/src/main/resources" />
       <recent name="$PROJECT_DIR$/cloud-provider-hystrix-payment8001/src/main/resources" />
-      <recent name="$PROJECT_DIR$/cloud-consumer-feign-order80/src/main/resources" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -276,7 +276,7 @@
       <workItem from="1608471472552" duration="861000" />
       <workItem from="1608472520990" duration="1289000" />
       <workItem from="1608536006363" duration="11662000" />
-      <workItem from="1608560042438" duration="8559000" />
+      <workItem from="1608560042438" duration="11487000" />
     </task>
     <servers />
   </component>
