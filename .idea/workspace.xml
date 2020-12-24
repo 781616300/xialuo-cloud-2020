@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7576e0b9-c805-416a-bb5d-8a4e1effb80d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cloud-consumer-feign-hystrix-order80/src/main/java/com/xialuo/cloud/controller/OrderHystirxController.java" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-consumer-feign-hystrix-order80/src/main/java/com/xialuo/cloud/controller/OrderHystirxController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cloud-consumer-feign-hystrix-order80/target/classes/com/xialuo/cloud/controller/OrderHystirxController.class" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-consumer-feign-hystrix-order80/target/classes/com/xialuo/cloud/controller/OrderHystirxController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-provider-payment8002/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-provider-payment8002/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-provider-payment8002/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-provider-payment8002/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,7 +32,7 @@
     </option>
   </component>
   <component name="Git.Rebase.Settings">
-    <option name="ONTO" value="f7323f0682470c887aa784956f8114850daddb85" />
+    <option name="ONTO" value="d64f80cac9c9d4c1b6ea14185a9701fc34fe7153" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -65,7 +65,7 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/cloud-gateway-gateway9527/src/main/resources" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -75,18 +75,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.xialuo.cloud.filter" />
+      <recent name="com.xialuo.cloud.config" />
       <recent name="com.xialuo.cloud" />
       <recent name="com.xialuo.cloud.controller" />
       <recent name="com.xialuo.cloud.service" />
-      <recent name="com.xialuo.cloud.config" />
-      <recent name="com.xialuo.myrule" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/cloud-gateway-gateway9527/src/main/resources" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/cloud-consumer-hystrix-dashboard9001/src/main/resources" />
       <recent name="$PROJECT_DIR$/cloud-consumer-feign-hystrix-order80/src/main/java/com/xialuo/cloud/service" />
       <recent name="$PROJECT_DIR$/cloud-consumer-feign-hystrix-order80/src/main/resources" />
-      <recent name="$PROJECT_DIR$/cloud-provider-hystrix-payment8001/src/main/resources" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -106,7 +106,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.HystrixDashboardMain9001">
+  <component name="RunManager" selected="Spring Boot.PaymentMain8002">
     <configuration name="EurekaMain7001" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="cloud-eureka-server7001" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.xialuo.cloud.EurekaMain7001" />
@@ -117,6 +117,19 @@
     <configuration name="EurekaMain7002" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="cloud-eureka-server7002" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.xialuo.cloud.EurekaMain7002" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GateWayMain9527" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="cloud-gateway-gateway9527" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.xialuo.cloud.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.xialuo.cloud.GateWayMain9527" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -137,19 +150,6 @@
     <configuration name="OrderConsulMain80" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="cloud-consumerconsul-order80" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.xialuo.cloud.OrderConsulMain80" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="OrderFeignMain80" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="cloud-consumer-feign-order80" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.xialuo.cloud.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.xialuo.cloud.OrderFeignMain80" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -194,11 +194,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="PaymentMain8001" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="cloud-provider-payment8001" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.xialuo.cloud.PaymentMain8001" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="PaymentMain8002" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="cloud-provider-payment8002" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.xialuo.cloud.controller.*" />
+          <option name="PATTERN" value="com.xialuo.cloud.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -223,11 +230,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.GateWayMain9527" />
+        <item itemvalue="Spring Boot.PaymentMain8002" />
         <item itemvalue="Spring Boot.PaymentHystrixMain8001" />
         <item itemvalue="Spring Boot.HystrixDashboardMain9001" />
         <item itemvalue="Spring Boot.OrderHystrixMain80" />
-        <item itemvalue="Spring Boot.OrderFeignMain80" />
-        <item itemvalue="Spring Boot.PaymentMain8002" />
       </list>
     </recent_temporary>
   </component>
@@ -249,7 +256,7 @@
             <path>
               <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
               <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@aca72dda" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@5c3f2269" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@599daed2" type="7427dc5b:ServiceModel$ServiceGroupNode" />
             </path>
           </expand>
           <select />
@@ -276,7 +283,9 @@
       <workItem from="1608471472552" duration="861000" />
       <workItem from="1608472520990" duration="1289000" />
       <workItem from="1608536006363" duration="11662000" />
-      <workItem from="1608560042438" duration="11487000" />
+      <workItem from="1608560042438" duration="12651000" />
+      <workItem from="1608706970372" duration="4804000" />
+      <workItem from="1608790799927" duration="646000" />
     </task>
     <servers />
   </component>
@@ -336,6 +345,31 @@
             </State>
           </value>
         </entry>
+        <entry key="3">
+          <value>
+            <State>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
             <State>
@@ -349,6 +383,7 @@
       <set>
         <option value="1" />
         <option value="2" />
+        <option value="3" />
       </set>
     </option>
   </component>
