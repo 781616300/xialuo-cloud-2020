@@ -454,3 +454,6 @@ hystrix- metrics-event-stream项目实现了对以上指标的监控。Spring Cl
 ```
 > 具体参考项目中的文档 《尚硅谷SpringCloud第2季2020.3.2.mmap》
 
+# 11。gateway
+
+![图片](1.png)
