@@ -474,135 +474,135 @@ Gateway是基于异步非阻塞模型上进行开发的，性能方面不需要�
 可以对路由指定Predicate (断言)和Filter (过滤器) ;
 集成Hystrix的断路器功能;
 集成Spring Cloud服务发现功能;
-易于编写的Predicate (断言)和Filter (过滤器) ;
-请求限流功能;
-支持路径重写.
-```
-
-##### 11.2.3.SpringCloud Gateway与Zuul的区别
-```html
-Spring Cloud Gateway与Zuul的区别
-在SpringCloud Finchley正式版之前，Spring Cloud推荐的网关是Netflix提供的Zuul:
-1、Zuul1.x, 是一个基于阻塞I/ 0的API Gateway
-2、 Zuul 1.x基于Servlet 2. 5使用阻塞架构它不支持任何长连接(如WebSocket) Zuul的设计模式和Nginx较像,每次I/O
-工作线程中选择一个执行，请求线程被阻塞到工作线程完成，但是差别是Nginx用C++实现，Zuul用Java实现，而JVM
--次加载较慢的情况，使得Zuul的性能相对较差。
-3、 Zuul 2.x理念更先进， 想基于Netty非阻塞和支持长连接,但SpringCloud目前还没有整合。 Zuul 2.x的性能较Zuul 1.x
-。在性能方面，根据官方提供的基准测试，Spring Cloud Gateway的RPS (每秒请求数)是Zuul的1. 6倍。
-4、 Spring Cloud Gateway建立在Spring Framework 5、 Project Reactor和Spring Boot2之上， 使用非阻塞API。
-5、Spring Cloud Gateway还支持WebSocket， 并且与Spring紧密集成拥有更好的开发体验
-```
-###### 11.2.3.1Zuul1.x模型:Servlet2.5阻塞
-```html
-Springcloud中所集成的Zuul版本,采用的是Tomcat容器， 使用的是传统的Servlet I0处理模型。
-学过尚硅谷web中期课程都知道一个题目， Servlet的生 命周期?servlet由servlet container进行生命周期管理.
-container启动时构造servlet对象并调用servlet init()进行初始化;
-container运行时接受请求，并为每个请求分配一个线程 (-般从线程池中获取空闲线程) 然后调用service().
-container关闭时调用servlet destory()销毁servlet;
-
-上述模式的缺点:
-servlet是一个简单的网络I0模型,当请求进入servlet container时, servlet container就会为其绑定一个线程,在并发不高的场景下这种模型是适用
-的。但是-旦高并发(比如抽风用jemeter压), 线程数量就会上涨，而线程资源代价是昂贵的(上线文切换，内存消耗大)严重影响请求的处理时间.
-在一些简单业务场景下，不希望为每个request分配一个线程，只需要1个或几个线程就能应对极大并发的请求，这种业务场景下servlet模型没有优势
-所以Zuul 1.X是基于servlet之上的一个阻塞式处理模型，即spring实现了处理所有request请求的一 个servlet (DispatcherServlet) 并由该servlet阻
-塞式处理处理。所以Springcloud Zul无法摆脱servlet模型的弊端
-```
-##### 11.2.3.2Gateway模型:Servlet3.1异步非阻塞
-```html
-传统的Web框架,此如说: struts2, springmvc等都是基于Servlet API与Servlet容器基础之上运行的。
-但是
-在Servlet3.1之后有了异步非阻塞的支持。而WebFlux是一个典型非阻塞异步的框架，它的核心是基于Reactor的相关API实现的。相对
-于传统的web框架来说， 它可以运行在诸如Netty, Undertow及支持Servlet3.1的容器上。非阻塞式+函数式编程(Spring5必须让你使
-用java8)
-Spring WebFlux是Spring 5.0引入的新的响应式框架，区别于Spring MVC,它不需要依赖Servlet API,它是完全异步非阻塞的，并
-且基于Reactor来实现响应式流规范。
-```
-#### 11.3gateway三大核心概念
-```html
-1Route(路由)
-路由是构建网关的基本模块,它由ID,目标URI,一系列的断言和过滤器组成,如断言为true则匹配该路由
-2Predicate(断言)
-参考的是Java8的java.util.function.Predicate 开发人员可以匹配HTTP请求中的所有内容(例如请求头或请求参数),如果请求与断言相匹配则进行路由
-1.After Route Predicate 
-2.Before Route Predicate 
-3.Between Route Predicate 
-4.Cookie Route Predicate 
-5.Header Route Predicate 
-6.Host Route Predicate
-7.Method Route Predicate 
-8.Path Route Predicate
-9.Query Route Predicate 
-10.RemoteAddr Route Predicate
-11.Weight Route Predicate
-3Filter(过滤)
-指的是Spring框架中GatewayFilter的实例,使用过滤器,可以在请求被路由前或者之后对请求进行修改.
-```
-
-#### 11.4案例cloud-gateway-gateway9527
-##### 11.4.1yml
-```yaml
-spring:
-  application:
-    name: cloud-gateway
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true #开启从注册中心动态创建路由的功能，利用微服务名进行路由
-      routes:
-        - id: payment_routh #payment_route    #路由的ID，没有固定规则但要求唯一，建议配合服务名
-#          uri: http://localhost:8001          #匹配后提供服务的路由地址
-          uri: lb://cloud-payment-service #匹配后提供服务的路由地址
-          predicates:
-            - Path=/payment/get/**         # 断言，路径相匹配的进行路由
-
-        - id: payment_routh2 #payment_route    #路由的ID，没有固定规则但要求唯一，建议配合服务名
-#          uri: http://localhost:8001          #匹配后提供服务的路由地址
-          uri: lb://cloud-payment-service #匹配后提供服务的路由地址
-          predicates:
-            - Path=/payment/lb/**         # 断言，路径相匹配的进行路由
-#            - After=2020-12-23T22:51:37.485+08:00[Asia/Shanghai]
-#            - Before=2020-12-23T23:51:37.485+08:00[Asia/Shanghai]
-#            - Between=2020-12-23T22:51:37.485+08:00[Asia/Shanghai], 2020-12-23T23:01:37.485+08:00[Asia/Shanghai]
-#            - Cookie=username,zzyy
-#            - Header=X-Request-Id, \d+  # 请求头要有X-Request-Id属性并且值为整数的正则表达式
-#            - Host=**.somehost.org,**.anotherhost.org
-#            - Method=GET,POST
-#            - Query=green
-#            - RemoteAddr=192.168.1.1/24
-#            - Weight=group1, 8
-#            - Weight=group1, 2
-#        - id: payment_routh3 #payment_route    #路由的ID，没有固定规则但要求唯一，建议配合服务名
-#          uri: https://news.baidu.com      #匹配后提供服务的路由地址
-##          uri: lb://cloud-payment-service #匹配后提供服务的路由地址
-#          predicates:
-#            - Path=/guonei/**         # 断言，路径相匹配的进行路由
-#        #访问地址http://localhost:9527/guonei 会跳转->https://news.baidu.com/guonei
-#        #他的意思是是 我访问网关9527的guonei路径 然后一看 网关里断言有国内匹配，然后找到uri是https://news.baidu.com
-#        #最后跳转https://news.baidu.com/guonei
-```
-> 他的意思是是 我访问网关9527的guonei路径 然后一看 网关里断言有国内匹配，然后找到uri是https://news.baidu.com,
-> 最后跳转https://news.baidu.com/guonei
-
-##### 11.4.2config
-```java
-@Configuration
-public class GateWayConfig
-{
-    @Bean
-    public RouteLocator customRouteLocator(RouteLocatorBuilder routeLocatorBuilder)
-    {
-        RouteLocatorBuilder.Builder routes = routeLocatorBuilder.routes();
-
-        routes.route("path_route_atguigu",
-                r -> r.path("/guonei")
-                        .uri("http://news.baidu.com")).build();
-
-        return routes.build();
-    }
-}
-```
-##### 11.4.3自定义过滤器GlobalFilter
+易于编写的Predicate (断言滤器) ;
+                  请求限流功能;
+                  支持路径重写.
+                  ```
+                  
+                  ##### 11.2.3.SpringCloud Gateway与Zuul的区别
+                  ```html
+                  Spring Cloud Gateway与Zuul的区别
+                  在SpringCloud Finchley正式版之前，Spring Cloud推荐的网关是Netflix提供的Zuul:
+                  1、Zuul1.x, 是一个基于阻塞I/ 0的API Gateway
+                  2、 Zuul 1.x基于Servlet 2. 5使用阻塞架构它不支持任何长连接(如WebSocket) Zuul的设计模式和Nginx较像,每次I/O
+                  工作线程中选择一个执行，请求线程被阻塞到工作线程完成，但是差别是Nginx用C++实现，Zuul用Java实现，而JVM
+                  -次加载较慢的情况，使得Zuul的性能相对较差。
+                  3、 Zuul 2.x理念更先进， 想基于Netty非阻塞和支持长连接,但SpringCloud目前还没有整合。 Zuul 2.x的性能较Zuul 1.x
+                  。在性能方面，根据官方提供的基准测试，Spring Cloud Gateway的RPS (每秒请求数)是Zuul的1. 6倍。
+                  4、 Spring Cloud Gateway建立在Spring Framework 5、 Project Reactor和Spring Boot2之上， 使用非阻塞API。
+                  5、Spring Cloud Gateway还支持WebSocket， 并且与Spring紧密集成拥有更好的开发体验
+                  ```
+                  ###### 11.2.3.1Zuul1.x模型:Servlet2.5阻塞
+                  ```html
+                  Springcloud中所集成的Zuul版本,采用的是Tomcat容器， 使用的是传统的Servlet I0处理模型。
+                  学过尚硅谷web中期课程都知道一个题目， Servlet的生 命周期?servlet由servlet container进行生命周期管理.
+                  container启动时构造servlet对象并调用servlet init()进行初始化;
+                  container运行时接受请求，并为每个请求分配一个线程 (-般从线程池中获取空闲线程) 然后调用service().
+                  container关闭时调用servlet destory()销毁servlet;
+                  
+                  上述模式的缺点:
+                  servlet是一个简单的网络I0模型,当请求进入servlet container时, servlet container就会为其绑定一个线程,在并发不高的场景下这种模型是适用
+                  的。但是-旦高并发(比如抽风用jemeter压), 线程数量就会上涨，而线程资源代价是昂贵的(上线文切换，内存消耗大)严重影响请求的处理时间.
+                  在一些简单业务场景下，不希望为每个request分配一个线程，只需要1个或几个线程就能应对极大并发的请求，这种业务场景下servlet模型没有优势
+                  所以Zuul 1.X是基于servlet之上的一个阻塞式处理模型，即spring实现了处理所有request请求的一 个servlet (DispatcherServlet) 并由该servlet阻
+                  塞式处理处理。所以Springcloud Zul无法摆脱servlet模型的弊端
+                  ```
+                  ##### 11.2.3.2Gateway模型:Servlet3.1异步非阻塞
+                  ```html
+                  传统的Web框架,此如说: struts2, springmvc等都是基于Servlet API与Servlet容器基础之上运行的。
+                  但是
+                  在Servlet3.1之后有了异步非阻塞的支持。而WebFlux是一个典型非阻塞异步的框架，它的核心是基于Reactor的相关API实现的。相对
+                  于传统的web框架来说， 它可以运行在诸如Netty, Undertow及支持Servlet3.1的容器上。非阻塞式+函数式编程(Spring5必须让你使
+                  用java8)
+                  Spring WebFlux是Spring 5.0引入的新的响应式框架，区别于Spring MVC,它不需要依赖Servlet API,它是完全异步非阻塞的，并
+                  且基于Reactor来实现响应式流规范。
+                  ```
+                  #### 11.3gateway三大核心概念
+                  ```html
+                  1Route(路由)
+                  路由是构建网关的基本模块,它由ID,目标URI,一系列的断言和过滤器组成,如断言为true则匹配该路由
+                  2Predicate(断言)
+                  参考的是Java8的java.util.function.Predicate 开发人员可以匹配HTTP请求中的所有内容(例如请求头或请求参数),如果请求与断言相匹配则进行路由
+                  1.After Route Predicate 
+                  2.Before Route Predicate 
+                  3.Between Route Predicate 
+                  4.Cookie Route Predicate 
+                  5.Header Route Predicate 
+                  6.Host Route Predicate
+                  7.Method Route Predicate 
+                  8.Path Route Predicate
+                  9.Query Route Predicate 
+                  10.RemoteAddr Route Predicate
+                  11.Weight Route Predicate
+                  3Filter(过滤)
+                  指的是Spring框架中GatewayFilter的实例,使用过滤器,可以在请求被路由前或者之后对请求进行修改.
+                  ```
+                  
+                  #### 11.4案例cloud-gateway-gateway9527
+                  ##### 11.4.1yml
+                  ```yaml
+                  spring:
+                    application:
+                      name: cloud-gateway
+                    cloud:
+                      gateway:
+                        discovery:
+                          locator:
+                            enabled: true #开启从注册中心动态创建路由的功能，利用微服务名进行路由
+                        routes:
+                          - id: payment_routh #payment_route    #路由的ID，没有固定规则但要求唯一，建议配合服务名
+                  #          uri: http://localhost:8001          #匹配后提供服务的路由地址
+                            uri: lb://cloud-payment-service #匹配后提供服务的路由地址
+                            predicates:
+                              - Path=/payment/get/**         # 断言，路径相匹配的进行路由
+                  
+                          - id: payment_routh2 #payment_route    #路由的ID，没有固定规则但要求唯一，建议配合服务名
+                  #          uri: http://localhost:8001          #匹配后提供服务的路由地址
+                            uri: lb://cloud-payment-service #匹配后提供服务的路由地址
+                            predicates:
+                              - Path=/payment/lb/**         # 断言，路径相匹配的进行路由
+                  #            - After=2020-12-23T22:51:37.485+08:00[Asia/Shanghai]
+                  #            - Before=2020-12-23T23:51:37.485+08:00[Asia/Shanghai]
+                  #            - Between=2020-12-23T22:51:37.485+08:00[Asia/Shanghai], 2020-12-23T23:01:37.485+08:00[Asia/Shanghai]
+                  #            - Cookie=username,zzyy
+                  #            - Header=X-Request-Id, \d+  # 请求头要有X-Request-Id属性并且值为整数的正则表达式
+                  #            - Host=**.somehost.org,**.anotherhost.org
+                  #            - Method=GET,POST
+                  #            - Query=green
+                  #            - RemoteAddr=192.168.1.1/24
+                  #            - Weight=group1, 8
+                  #            - Weight=group1, 2
+                  #        - id: payment_routh3 #payment_route    #路由的ID，没有固定规则但要求唯一，建议配合服务名
+                  #          uri: https://news.baidu.com      #匹配后提供服务的路由地址
+                  ##          uri: lb://cloud-payment-service #匹配后提供服务的路由地址
+                  #          predicates:
+                  #            - Path=/guonei/**         # 断言，路径相匹配的进行路由
+                  #        #访问地址http://localhost:9527/guonei 会跳转->https://news.baidu.com/guonei
+                  #        #他的意思是是 我访问网关9527的guonei路径 然后一看 网关里断言有国内匹配，然后找到uri是https://news.baidu.com
+                  #        #最后跳转https://news.baidu.com/guonei
+                  ```
+                  > 他的意思是是 我访问网关9527的guonei路径 然后一看 网关里断言有国内匹配，然后找到uri是https://news.baidu.com,
+                  > 最后跳转https://news.baidu.com/guonei
+                  
+                  ##### 11.4.2config
+                  ```java
+                  @Configuration
+                  public class GateWayConfig
+                  {
+                      @Bean
+                      public RouteLocator customRouteLocator(RouteLocatorBuilder routeLocatorBuilder)
+                      {
+                          RouteLocatorBuilder.Builder routes = routeLocatorBuilder.routes();
+                  
+                          routes.route("path_route_atguigu",
+                                  r -> r.path("/guonei")
+                                          .uri("http://news.baidu.com")).build();
+                  
+                          return routes.build();
+                      }
+                  }
+                  ```
+                  ##### 11.4.3自定义过滤器)和Filter (过GlobalFilter
 ```java
 @Component
 @Slf4j
@@ -630,4 +630,17 @@ public class MyLogGateWayFilter implements GlobalFilter,Ordered
     }
 }
 
+```
+
+# 12.SpringCloud config分布式配置中心
+#### 12.1是什么、怎么玩
+```html
+SpringCloud Config为微服务架构中的微服务提供集中化的外部配置支持，配置服务器为各个不同微服务应用的所有环境提供了-个中
+心化的外部配置。
+```
+```html
+SpringCloud Config分为服务端和客户端两部分。
+服务端也称为分布式配置中心，它是一个独立的微服务应用， 用来连接配置服务器并为客户端提供获取配置信息,加密/解密信息等访问接口
+客户端则是通过指定的配置中心来管理应用资源，以及与业务相关的配置内容,并在启动的时候从配置中心获取和加载配置信息配置服
+务器默认采用git来存储配置信息，这样就有助于对环境配置进行版本管理，并且可以通过git客户端工具来方便的管理和访问配置内容
 ```

@@ -11,18 +11,18 @@ spring:
           uri: https://github.com/781616300/springcloud-config.git #GitHub上面的git仓库名字
           force-pull: true
           username: 781616300@qq.com
-          password: Xiaoliu009
+          password: 这个不能告诉你
         ####搜索目录
           search-paths:
             - springcloud-config
       ####读取分支
       label: main
 #rabbitmq相关配置
-#rabbitmq:
-#    host: localhost
-#    port: 5672
-#    username: guest
-#    password: guest
+rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 #服务注册到eureka地址
 eureka:
@@ -31,10 +31,10 @@ eureka:
       defaultZone: http://localhost:7001/eureka
 
 ##rabbitmq相关配置,暴露bus刷新配置的端点
-#management:
-#  endpoints: #暴露bus刷新配置的端点
-#    web:
-#      exposure:
-#        include: 'bus-refresh'
+management:
+  endpoints: #暴露bus刷新配置的端点
+    web:
+      exposure:
+        include: 'bus-refresh'
 
 
