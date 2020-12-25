@@ -644,3 +644,128 @@ SpringCloud Config分为服务端和客户端两部分。
 客户端则是通过指定的配置中心来管理应用资源，以及与业务相关的配置内容,并在启动的时候从配置中心获取和加载配置信息配置服
 务器默认采用git来存储配置信息，这样就有助于对环境配置进行版本管理，并且可以通过git客户端工具来方便的管理和访问配置内容
 ```
+
+#### 12.2 config服务端yaml:cloud-config-center-3344
+```yaml
+server:
+  port: 3344
+
+spring:
+  application:
+    name:  cloud-config-center #注册进Eureka服务器的微服务名
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/781616300/springcloud-config.git #GitHub上面的git仓库名字
+          force-pull: true
+          username: 781616300@qq.com
+          password: 这个不能告诉你
+        ####搜索目录
+          search-paths:
+            - springcloud-config
+      ####读取分支
+      label: main
+
+#服务注册到eureka地址
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+```
+> 然后访问：http://localhost:3344/main/config-dev.yaml 就能出现配置的内容
+
+#### 12.3 config客户端yaml:cloud-config-client-3355
+```yaml
+server:
+  port: 3355
+
+spring:
+  application:
+    name: config-client
+  cloud:
+    #Config客户端配置
+    config:
+      label: main #分支名称
+      name: config #配置文件名称
+      profile: dev #读取后缀名称   上述3个综合：master分支上config-dev.yml的配置文件被读取http://localhost:3344/main/config-dev.yaml
+      uri: http://localhost:3344 #配置中心地址k
+
+#服务注册到eureka地址
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+```
+
+#### 12.4动态刷新
+```html
+1.@refreshScope业务类Controller修改
+2.运维需要执行post请求 手动刷新 curl -X POST "http://localhost:3355/actuator/refresh"
+```
+
+#### 12.5弊端：每个微服务都要执行一次post请求，手动刷新
+
+# 13SpringCloud Bus消息总线：Spring Cloud Bus配合Spring Cloud Config使用可以实现配置的动态刷新
+#### 13.1是什么
+```html
+在微服务架构的系统中，通常会使用轻量级的消息代理来构建一个共用的消息主题, 并让系统中所有微服务实例都连接上来。由于该主题中产生的消
+息会被所有实例监听和消费，所以称它为消息总线。在总线上的各个实例，都可以方便地广播-些需要让其他连接在该主题上的实例都知道的消息。
+Bus支持两种消息代理:RabbitMQ和Kafka
+```
+#### 13.2基本原理
+```html
+ConfigClient实例都监听MQ中同-个topic(默认是springCloudBus)。当个服务刷新数据的时候，它会把这个信息放入到Topic中, 这样其它监听
+同-Topic的服务就能得到通知，然后去更新自身的配置。
+```
+#### 13.3设计思想
+```html
+微服务架构如下
+7001EurekaServer
+3344ConfigServer 注册在7001。配置从远程git仓库读取
+3355ConfigClient 注册在7001。配置从3344上拉取
+3366ConfigClient 注册在7001。配置从3344上拉取
+3377ConfigClient 注册在7001。配置从3344上拉取
+
+两种设计思量
+1.利用消息总线触发一个客户端/bus/refresh，从而刷新所有客户端配置
+2.利用消息总线触发一个服务端ConfigServer的/bus/refresh端点，从而刷新所有客户端配置
+
+2的架构显然更加合适，图一不合适原因如下：
+a.打破了微服务的职责单一性，因为微服务本身是业务模块，它本不应该承担配置刷新的职责
+b.破坏了微服务各节点的对等性
+c.有一定的局限性，例如，微服务在迁移时，它的网络地址常常会发生变化，此时如果想要做到自动刷新那就会增加更多的修改
+```
+
+
+参考[分布式任务调度平台XXL-JOB搭建教程](https://www.cnblogs.com/ysocean/p/10541151.html "分布式任务调度平台XXL-JOB搭建教程")
+
+这里只说搭建好之后 如何使用
+```xml
+xxl:
+  job:
+    accessToken: ''
+    admin:
+      addresses: http://172.20.999.888:8080/xxl-job-admin/
+    executor:
+      appname: xialuo-job
+      logpath: /logs/xxl-job/jobhandler
+      logretentiondays: -1
+      address: ''
+      ip: ''
+      port: 8888
+```
+
+![](http://59.110.213.162:8888/upload/20201014_10353856.png)
+
+首先 xxl.job.admin.addresses 必须指定上
+然后 xxl.job.executor.appname 必须和执行器的名字对应上
+
+然后在项目启动时，会把服务注册到http://172.20.999.888:8080/xxl-job-admin/这里，然后 页面配置的时候 自动就会发现
+
