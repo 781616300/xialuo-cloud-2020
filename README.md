@@ -743,29 +743,13 @@ b.破坏了微服务各节点的对等性
 c.有一定的局限性，例如，微服务在迁移时，它的网络地址常常会发生变化，此时如果想要做到自动刷新那就会增加更多的修改
 ```
 
+#### 13.4测试
+````html
+1.修改Github上配置文件增加版本号
+2.发送Post请求 curl -X POST "http://localhost:3344/actuator/bus-refresh" 一次发送，处处生效
+3.如果想要 3355 3366 生效 3377不生效 curl -X POST "http://localhoste:3344/actuator/bus-rfresh/config-client:3355"
+````
 
-参考[分布式任务调度平台XXL-JOB搭建教程](https://www.cnblogs.com/ysocean/p/10541151.html "分布式任务调度平台XXL-JOB搭建教程")
+#### 15SpringCloud Stream消息驱动
 
-这里只说搭建好之后 如何使用
-```xml
-xxl:
-  job:
-    accessToken: ''
-    admin:
-      addresses: http://172.20.999.888:8080/xxl-job-admin/
-    executor:
-      appname: xialuo-job
-      logpath: /logs/xxl-job/jobhandler
-      logretentiondays: -1
-      address: ''
-      ip: ''
-      port: 8888
-```
-
-![](http://59.110.213.162:8888/upload/20201014_10353856.png)
-
-首先 xxl.job.admin.addresses 必须指定上
-然后 xxl.job.executor.appname 必须和执行器的名字对应上
-
-然后在项目启动时，会把服务注册到http://172.20.999.888:8080/xxl-job-admin/这里，然后 页面配置的时候 自动就会发现
 
