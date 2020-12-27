@@ -750,6 +750,50 @@ c.有一定的局限性，例如，微服务在迁移时，它的网络地址常
 3.如果想要 3355 3366 生效 3377不生效 curl -X POST "http://localhoste:3344/actuator/bus-rfresh/config-client:3355"
 ````
 
-#### 15SpringCloud Stream消息驱动
+# 15SpringCloud Stream消息驱动
+#### 15.1什么是SpringCloudStream
+```html
+官方定义Spring Cloud Stream是一个构建消息驱动微服务的框架。
+应用程序通过inputs或者outputs来与Spring Cloud Stream中binder对象交互。
+通过我们配置来binding(绑定)，而Spring Cloud Stream的binder对象负责与消息中间件交互。
+所以，我们只需要搞清楚如何与Spring Cloud Stream交互就可以方便使用消息驱动的方式。
+通过使用Spring Integration来连接消息代理中间件以实现消息事件驱动。
+Spring Cloud Stream为-些供应商的消息中间件产品提供了个性化的自动化配置实现，引了发布订阅、消费组、分区的三个核心概念。
+目前仅支持RabbitMQ、Kafka.
 
+
+一句话:屏蔽底层消息中间件的差异，降低切换成本，统一消息的编程模型
+```
+
+#### 15.2stream凭什么可以统一底层差异
+```html
+在没有绑定器这个概念的情况下，我们的SpringBoot应用要 直接与消息中间件进行信息交互的时候,
+由于各消息中间件构建的初衷不同，它们的实现细节上会有较大的差异性
+通过定义绑定器作为中间层，完美地实现了应用程序与消息中间件细节之间的隔离。
+通过向应用程序暴露统一的Channel通道, 使得应用程序不需要再考虑各种不同的消息中间件实现.
+通过定义绑定器Binder作为中间层，实现了应用程序与消息中间件细节之间的隔离。
+
+Stream中的消息通信方式遵循了发布-订阅模式
+Topic主题进行广播
+在RabbitMQ就是Exchange
+在Kafka中就是Topic
+```
+
+#### 15.3Spring Cloud Stream标准流程套路
+```html
+1.Binder:很方便的连接中间件，屏蔽差异
+2.Channel:通道，是队列Queue的一种抽象，在消息通讯系统中就是实现存储和转发的媒介，通过Channel对队列进行配置
+3.Source和Sink:简单的可以理解为参照对象是Spring Cloud Stream 自身，从Stream发布消息就是输出，接受消息就是输入
+
+消息生产者                                 消息消费者
+业务逻辑                                   业务逻辑 
+  ⬇                                         ⬆
+springcloud stream                        springcloud stream
+source                                    sink
+channel                                   channel
+binder ➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡MQ➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡ binder
+```
+
+#### 15.4分组：为了不重复消费
+#### 15.5持久化：配置分组就会持久化
 
