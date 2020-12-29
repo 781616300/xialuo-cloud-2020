@@ -849,4 +849,73 @@ spring:
         server-addr: 192.168.111.144:1111 #配置Nacos地址
 ```
 
+# 19 SpringCloud Alibaba Sentinel实现熔断与限流
 
+#### 19.1流控模式
+
+- 关联
+```html
+是什么
+当关联的资源达到阈值时，就限流自己
+当与A关联的资源B达到阈值后，就限流自己
+B惹事，A挂了
+```
+- 链路:多个请求调用同一个微服务
+
+- 直接拒绝（RuleConstant.CONTROL_BEHAVIOR_DEFAULT）方式是默认的流量控制方式，
+```html
+当QPS超过任意规则的阈值后，新的请求就会被立即拒绝，拒绝方式为抛出FlowException。
+```
+
+- Warm Up（RuleConstant.CONTROL_BEHAVIOR_WARM_UP）方式，即预热/冷启动方式。
+```html
+当系统长期处于低水位的情况下，当流量突然增加时，直接把系统拉升到高水位可能瞬间把系统压垮。
+通过"冷启动"，让通过的流量缓慢增加，在一定时间内逐渐增加到阈值上限，给冷系统一个预热的时间，避免冷系统被压垮。
+令牌桶算法
+我们用桶里剩余的令牌来量化系统的使用率。假设系统每秒的处理能力为 b,系统每处理一个请求，就从桶中取走一个令牌；
+每秒这个令牌桶会自动掉落b个令牌。令牌桶越满，则说明系统的利用率越低；当令牌桶里的令牌高于某个阈值之后，我们称之为令牌桶"饱和"。
+公式:阈值除以coldFactor(默认值为3)，经过预热时长后才会达到阈值
+说明：默认coldFactor为3，即请求QPS从threshold/3开始，经预热时长逐渐升至设定的QPS阈值
+```
+
+- 匀速排队（RuleConstant.CONTROL_BEHAVIOR_RATE_LIMITER）方式会严格控制请求通过的间隔时间，也即是让请求以均匀的速度通过，对应的是漏桶算法。
+com.alibaba.csp.sentinel.slots.block.flow.controller.DefaultController 
+com.alibaba.csp.sentinel.slots.block.flow.controller.RateLimiterController 
+com.alibaba.csp.sentinel.slots.block.flow.controller.WarmUpController 
+com.alibaba.csp.sentinel.slots.block.flow.controller.WarmUpRateLimiterController
+
+#### 19.2降级规则
+- 慢调用比例 (SLOW_REQUEST_RATIO)(秒级)：选择以慢调用比例作为阈值，需要设置允许的慢调用 RT（即最大的响应时间），请求的响应时间大于该值则统计为慢调用。当单位统计时长（statIntervalMs）内请求数目大于设置的最小请求数目，并且慢调用的比例大于阈值，则接下来的熔断时长内请求会自动被熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求响应时间小于设置的慢调用 RT 则结束熔断，若大于设置的慢调用 RT 则会再次被熔断。
+```html
+RT (平均响应时间，秒级)
+平均响应时间超出阈值且在时间窗口内通过的请求> =5,两个条件同时满足后触发降级
+窗口期过后关闭断路器
+RT最大4900 (更大的需要通过-Dcsp.sentinel.statistic.max.rt=XXXX才能生效)
+```
+- 异常比例 (ERROR_RATIO)(秒级)：当单位统计时长（statIntervalMs）内请求数目大于设置的最小请求数目，并且异常的比例大于阈值，则接下来的熔断时长内请求会自动被熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求成功完成（没有错误）则结束熔断，否则会再次被熔断。异常比率的阈值范围是 [0.0, 1.0]，代表 0% - 100%。
+```html
+异常比例( DEGRADE GRADE EXCEPTION RATIO):当資源的毎秒清求量>= 5,并且毎秒异常息数占
+通过量的比値超过阈值( DegradeRule中的count )之后,炎源迸入降級状志，即在接下的吋
+间窗口( DegradeRule中的timeWindow, 以sカ単位)之内，対送个方法的凋用都会自幼地返
+回。昇常比率的閾値范国是[0.0, 1.0] ,代表0%- 100%。
+```
+- 异常数 (ERROR_COUNT)(分钟)：当单位统计时长内的异常数目超过阈值之后会自动进行熔断。经过熔断时长后熔断器会进入探测恢复状态（HALF-OPEN 状态），若接下来的一个请求成功完成（没有错误）则结束熔断，否则会再次被熔断。
+```html
+异常数( DEGRADE _GRADE _EXCEPTION _COUNT ):当资源近1分钟的异常数目超过阈值之后会进行熔
+断。注意由于统计时间窗口是分钟级别的，若timelWindow 小于60s,则结束熔断状态后仍可能
+再进入熔断状态。
+```
+
+#### 19.3热点key限流
+- HystrixCommand 到 @SentinelResource
+```html
+第一个参数p1，当QPS超过1秒1次点击后马上被限流
+
+普通
+超过1秒钟一个后，达到阈值1后马上被限流
+我们期望p1参数当它是某个特殊值时，它的限流值和平时不一样
+特例
+假如当p1的值等于5时，它的阈值可以达到200
+```
+
+#### 19.4系统规则（不是重点）
