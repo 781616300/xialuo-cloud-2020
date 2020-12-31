@@ -454,7 +454,7 @@ hystrix- metrics-event-stream项目实现了对以上指标的监控。Spring Cl
 ```
 > 具体参考项目中的文档 《尚硅谷SpringCloud第2季2020.3.2.mmap》
 
-# 11。gateway
+# 11.gateway
 #### 11.1简介 
 > SpringCloud Gateway-句话: gateway是原zuul1.x版的替代
 
@@ -475,134 +475,134 @@ Gateway是基于异步非阻塞模型上进行开发的，性能方面不需要�
 集成Hystrix的断路器功能;
 集成Spring Cloud服务发现功能;
 易于编写的Predicate (断言滤器) ;
-                  请求限流功能;
-                  支持路径重写.
-                  ```
-                  
-                  ##### 11.2.3.SpringCloud Gateway与Zuul的区别
-                  ```html
-                  Spring Cloud Gateway与Zuul的区别
-                  在SpringCloud Finchley正式版之前，Spring Cloud推荐的网关是Netflix提供的Zuul:
-                  1、Zuul1.x, 是一个基于阻塞I/ 0的API Gateway
-                  2、 Zuul 1.x基于Servlet 2. 5使用阻塞架构它不支持任何长连接(如WebSocket) Zuul的设计模式和Nginx较像,每次I/O
-                  工作线程中选择一个执行，请求线程被阻塞到工作线程完成，但是差别是Nginx用C++实现，Zuul用Java实现，而JVM
-                  -次加载较慢的情况，使得Zuul的性能相对较差。
-                  3、 Zuul 2.x理念更先进， 想基于Netty非阻塞和支持长连接,但SpringCloud目前还没有整合。 Zuul 2.x的性能较Zuul 1.x
-                  。在性能方面，根据官方提供的基准测试，Spring Cloud Gateway的RPS (每秒请求数)是Zuul的1. 6倍。
-                  4、 Spring Cloud Gateway建立在Spring Framework 5、 Project Reactor和Spring Boot2之上， 使用非阻塞API。
-                  5、Spring Cloud Gateway还支持WebSocket， 并且与Spring紧密集成拥有更好的开发体验
-                  ```
-                  ###### 11.2.3.1Zuul1.x模型:Servlet2.5阻塞
-                  ```html
-                  Springcloud中所集成的Zuul版本,采用的是Tomcat容器， 使用的是传统的Servlet I0处理模型。
-                  学过尚硅谷web中期课程都知道一个题目， Servlet的生 命周期?servlet由servlet container进行生命周期管理.
-                  container启动时构造servlet对象并调用servlet init()进行初始化;
-                  container运行时接受请求，并为每个请求分配一个线程 (-般从线程池中获取空闲线程) 然后调用service().
-                  container关闭时调用servlet destory()销毁servlet;
-                  
-                  上述模式的缺点:
-                  servlet是一个简单的网络I0模型,当请求进入servlet container时, servlet container就会为其绑定一个线程,在并发不高的场景下这种模型是适用
-                  的。但是-旦高并发(比如抽风用jemeter压), 线程数量就会上涨，而线程资源代价是昂贵的(上线文切换，内存消耗大)严重影响请求的处理时间.
-                  在一些简单业务场景下，不希望为每个request分配一个线程，只需要1个或几个线程就能应对极大并发的请求，这种业务场景下servlet模型没有优势
-                  所以Zuul 1.X是基于servlet之上的一个阻塞式处理模型，即spring实现了处理所有request请求的一 个servlet (DispatcherServlet) 并由该servlet阻
-                  塞式处理处理。所以Springcloud Zul无法摆脱servlet模型的弊端
-                  ```
-                  ##### 11.2.3.2Gateway模型:Servlet3.1异步非阻塞
-                  ```html
-                  传统的Web框架,此如说: struts2, springmvc等都是基于Servlet API与Servlet容器基础之上运行的。
-                  但是
-                  在Servlet3.1之后有了异步非阻塞的支持。而WebFlux是一个典型非阻塞异步的框架，它的核心是基于Reactor的相关API实现的。相对
-                  于传统的web框架来说， 它可以运行在诸如Netty, Undertow及支持Servlet3.1的容器上。非阻塞式+函数式编程(Spring5必须让你使
-                  用java8)
-                  Spring WebFlux是Spring 5.0引入的新的响应式框架，区别于Spring MVC,它不需要依赖Servlet API,它是完全异步非阻塞的，并
-                  且基于Reactor来实现响应式流规范。
-                  ```
-                  #### 11.3gateway三大核心概念
-                  ```html
-                  1Route(路由)
-                  路由是构建网关的基本模块,它由ID,目标URI,一系列的断言和过滤器组成,如断言为true则匹配该路由
-                  2Predicate(断言)
-                  参考的是Java8的java.util.function.Predicate 开发人员可以匹配HTTP请求中的所有内容(例如请求头或请求参数),如果请求与断言相匹配则进行路由
-                  1.After Route Predicate 
-                  2.Before Route Predicate 
-                  3.Between Route Predicate 
-                  4.Cookie Route Predicate 
-                  5.Header Route Predicate 
-                  6.Host Route Predicate
-                  7.Method Route Predicate 
-                  8.Path Route Predicate
-                  9.Query Route Predicate 
-                  10.RemoteAddr Route Predicate
-                  11.Weight Route Predicate
-                  3Filter(过滤)
-                  指的是Spring框架中GatewayFilter的实例,使用过滤器,可以在请求被路由前或者之后对请求进行修改.
-                  ```
-                  
-                  #### 11.4案例cloud-gateway-gateway9527
-                  ##### 11.4.1yml
-                  ```yaml
-                  spring:
-                    application:
-                      name: cloud-gateway
-                    cloud:
-                      gateway:
-                        discovery:
-                          locator:
-                            enabled: true #开启从注册中心动态创建路由的功能，利用微服务名进行路由
-                        routes:
-                          - id: payment_routh #payment_route    #路由的ID，没有固定规则但要求唯一，建议配合服务名
-                  #          uri: http://localhost:8001          #匹配后提供服务的路由地址
-                            uri: lb://cloud-payment-service #匹配后提供服务的路由地址
-                            predicates:
-                              - Path=/payment/get/**         # 断言，路径相匹配的进行路由
-                  
-                          - id: payment_routh2 #payment_route    #路由的ID，没有固定规则但要求唯一，建议配合服务名
-                  #          uri: http://localhost:8001          #匹配后提供服务的路由地址
-                            uri: lb://cloud-payment-service #匹配后提供服务的路由地址
-                            predicates:
-                              - Path=/payment/lb/**         # 断言，路径相匹配的进行路由
-                  #            - After=2020-12-23T22:51:37.485+08:00[Asia/Shanghai]
-                  #            - Before=2020-12-23T23:51:37.485+08:00[Asia/Shanghai]
-                  #            - Between=2020-12-23T22:51:37.485+08:00[Asia/Shanghai], 2020-12-23T23:01:37.485+08:00[Asia/Shanghai]
-                  #            - Cookie=username,zzyy
-                  #            - Header=X-Request-Id, \d+  # 请求头要有X-Request-Id属性并且值为整数的正则表达式
-                  #            - Host=**.somehost.org,**.anotherhost.org
-                  #            - Method=GET,POST
-                  #            - Query=green
-                  #            - RemoteAddr=192.168.1.1/24
-                  #            - Weight=group1, 8
-                  #            - Weight=group1, 2
-                  #        - id: payment_routh3 #payment_route    #路由的ID，没有固定规则但要求唯一，建议配合服务名
-                  #          uri: https://news.baidu.com      #匹配后提供服务的路由地址
-                  ##          uri: lb://cloud-payment-service #匹配后提供服务的路由地址
-                  #          predicates:
-                  #            - Path=/guonei/**         # 断言，路径相匹配的进行路由
-                  #        #访问地址http://localhost:9527/guonei 会跳转->https://news.baidu.com/guonei
-                  #        #他的意思是是 我访问网关9527的guonei路径 然后一看 网关里断言有国内匹配，然后找到uri是https://news.baidu.com
-                  #        #最后跳转https://news.baidu.com/guonei
-                  ```
-                  > 他的意思是是 我访问网关9527的guonei路径 然后一看 网关里断言有国内匹配，然后找到uri是https://news.baidu.com,
-                  > 最后跳转https://news.baidu.com/guonei
-                  
-                  ##### 11.4.2config
-                  ```java
-                  @Configuration
-                  public class GateWayConfig
-                  {
-                      @Bean
-                      public RouteLocator customRouteLocator(RouteLocatorBuilder routeLocatorBuilder)
-                      {
-                          RouteLocatorBuilder.Builder routes = routeLocatorBuilder.routes();
-                  
-                          routes.route("path_route_atguigu",
-                                  r -> r.path("/guonei")
-                                          .uri("http://news.baidu.com")).build();
-                  
-                          return routes.build();
-                      }
-                  }
-                  ```
-                  ##### 11.4.3自定义过滤器)和Filter (过GlobalFilter
+请求限流功能;
+支持路径重写.
+```
+
+##### 11.2.3.SpringCloud Gateway与Zuul的区别
+```html
+Spring Cloud Gateway与Zuul的区别
+在SpringCloud Finchley正式版之前，Spring Cloud推荐的网关是Netflix提供的Zuul:
+1、Zuul1.x, 是一个基于阻塞I/ 0的API Gateway
+2、 Zuul 1.x基于Servlet 2. 5使用阻塞架构它不支持任何长连接(如WebSocket) Zuul的设计模式和Nginx较像,每次I/O
+工作线程中选择一个执行，请求线程被阻塞到工作线程完成，但是差别是Nginx用C++实现，Zuul用Java实现，而JVM
+-次加载较慢的情况，使得Zuul的性能相对较差。
+3、 Zuul 2.x理念更先进， 想基于Netty非阻塞和支持长连接,但SpringCloud目前还没有整合。 Zuul 2.x的性能较Zuul 1.x
+。在性能方面，根据官方提供的基准测试，Spring Cloud Gateway的RPS (每秒请求数)是Zuul的1. 6倍。
+4、 Spring Cloud Gateway建立在Spring Framework 5、 Project Reactor和Spring Boot2之上， 使用非阻塞API。
+5、Spring Cloud Gateway还支持WebSocket， 并且与Spring紧密集成拥有更好的开发体验
+```
+###### 11.2.3.1Zuul1.x模型:Servlet2.5阻塞
+```html
+Springcloud中所集成的Zuul版本,采用的是Tomcat容器， 使用的是传统的Servlet I0处理模型。
+学过尚硅谷web中期课程都知道一个题目， Servlet的生 命周期?servlet由servlet container进行生命周期管理.
+container启动时构造servlet对象并调用servlet init()进行初始化;
+container运行时接受请求，并为每个请求分配一个线程 (-般从线程池中获取空闲线程) 然后调用service().
+container关闭时调用servlet destory()销毁servlet;
+
+上述模式的缺点:
+servlet是一个简单的网络I0模型,当请求进入servlet container时, servlet container就会为其绑定一个线程,在并发不高的场景下这种模型是适用
+的。但是-旦高并发(比如抽风用jemeter压), 线程数量就会上涨，而线程资源代价是昂贵的(上线文切换，内存消耗大)严重影响请求的处理时间.
+在一些简单业务场景下，不希望为每个request分配一个线程，只需要1个或几个线程就能应对极大并发的请求，这种业务场景下servlet模型没有优势
+所以Zuul 1.X是基于servlet之上的一个阻塞式处理模型，即spring实现了处理所有request请求的一 个servlet (DispatcherServlet) 并由该servlet阻
+塞式处理处理。所以Springcloud Zul无法摆脱servlet模型的弊端
+```
+##### 11.2.3.2Gateway模型:Servlet3.1异步非阻塞
+```html
+传统的Web框架,此如说: struts2, springmvc等都是基于Servlet API与Servlet容器基础之上运行的。
+但是
+在Servlet3.1之后有了异步非阻塞的支持。而WebFlux是一个典型非阻塞异步的框架，它的核心是基于Reactor的相关API实现的。相对
+于传统的web框架来说， 它可以运行在诸如Netty, Undertow及支持Servlet3.1的容器上。非阻塞式+函数式编程(Spring5必须让你使
+用java8)
+Spring WebFlux是Spring 5.0引入的新的响应式框架，区别于Spring MVC,它不需要依赖Servlet API,它是完全异步非阻塞的，并
+且基于Reactor来实现响应式流规范。
+```
+#### 11.3gateway三大核心概念
+```html
+1Route(路由)
+路由是构建网关的基本模块,它由ID,目标URI,一系列的断言和过滤器组成,如断言为true则匹配该路由
+2Predicate(断言)
+参考的是Java8的java.util.function.Predicate 开发人员可以匹配HTTP请求中的所有内容(例如请求头或请求参数),如果请求与断言相匹配则进行路由
+1.After Route Predicate 
+2.Before Route Predicate 
+3.Between Route Predicate 
+4.Cookie Route Predicate 
+5.Header Route Predicate 
+6.Host Route Predicate
+7.Method Route Predicate 
+8.Path Route Predicate
+9.Query Route Predicate 
+10.RemoteAddr Route Predicate
+11.Weight Route Predicate
+3Filter(过滤)
+指的是Spring框架中GatewayFilter的实例,使用过滤器,可以在请求被路由前或者之后对请求进行修改.
+```
+
+#### 11.4案例cloud-gateway-gateway9527
+##### 11.4.1yml
+```yaml
+spring:
+application:
+name: cloud-gateway
+cloud:
+gateway:
+discovery:
+  locator:
+    enabled: true #开启从注册中心动态创建路由的功能，利用微服务名进行路由
+routes:
+  - id: payment_routh #payment_route    #路由的ID，没有固定规则但要求唯一，建议配合服务名
+#          uri: http://localhost:8001          #匹配后提供服务的路由地址
+    uri: lb://cloud-payment-service #匹配后提供服务的路由地址
+    predicates:
+      - Path=/payment/get/**         # 断言，路径相匹配的进行路由
+
+  - id: payment_routh2 #payment_route    #路由的ID，没有固定规则但要求唯一，建议配合服务名
+#          uri: http://localhost:8001          #匹配后提供服务的路由地址
+    uri: lb://cloud-payment-service #匹配后提供服务的路由地址
+    predicates:
+      - Path=/payment/lb/**         # 断言，路径相匹配的进行路由
+#            - After=2020-12-23T22:51:37.485+08:00[Asia/Shanghai]
+#            - Before=2020-12-23T23:51:37.485+08:00[Asia/Shanghai]
+#            - Between=2020-12-23T22:51:37.485+08:00[Asia/Shanghai], 2020-12-23T23:01:37.485+08:00[Asia/Shanghai]
+#            - Cookie=username,zzyy
+#            - Header=X-Request-Id, \d+  # 请求头要有X-Request-Id属性并且值为整数的正则表达式
+#            - Host=**.somehost.org,**.anotherhost.org
+#            - Method=GET,POST
+#            - Query=green
+#            - RemoteAddr=192.168.1.1/24
+#            - Weight=group1, 8
+#            - Weight=group1, 2
+#        - id: payment_routh3 #payment_route    #路由的ID，没有固定规则但要求唯一，建议配合服务名
+#          uri: https://news.baidu.com      #匹配后提供服务的路由地址
+##          uri: lb://cloud-payment-service #匹配后提供服务的路由地址
+#          predicates:
+#            - Path=/guonei/**         # 断言，路径相匹配的进行路由
+#        #访问地址http://localhost:9527/guonei 会跳转->https://news.baidu.com/guonei
+#        #他的意思是是 我访问网关9527的guonei路径 然后一看 网关里断言有国内匹配，然后找到uri是https://news.baidu.com
+#        #最后跳转https://news.baidu.com/guonei
+```
+> 他的意思是是 我访问网关9527的guonei路径 然后一看 网关里断言有国内匹配，然后找到uri是https://news.baidu.com,
+> 最后跳转https://news.baidu.com/guonei
+
+##### 11.4.2config
+```java
+@Configuration
+public class GateWayConfig
+{
+@Bean
+public RouteLocator customRouteLocator(RouteLocatorBuilder routeLocatorBuilder)
+{
+  RouteLocatorBuilder.Builder routes = routeLocatorBuilder.routes();
+
+  routes.route("path_route_atguigu",
+          r -> r.path("/guonei")
+                  .uri("http://news.baidu.com")).build();
+
+  return routes.build();
+}
+}
+```
+##### 11.4.3自定义过滤器)和Filter (过GlobalFilter
 ```java
 @Component
 @Slf4j
@@ -919,3 +919,109 @@ RT最大4900 (更大的需要通过-Dcsp.sentinel.statistic.max.rt=XXXX才能生
 ```
 
 #### 19.4系统规则（不是重点）
+```
+系统保护规则是从应用级别的入口流量进行控制，从单台机器的load. CPU 使用率.平均RT,入口
+QPS和并发线程数等几个维度监控应用指标，让系统尽可能跑在最大吞吐量的同时保证系统整体的稳定性。
+系统保护规则是应用整体维度的，而不是资源维度的，并且仅对入口流量生效。入口流量指的是进入
+应用的流量( EntryType.IN) 。比如Web服务或Dubbo服务端接收的请求，都属于入口流量。
+```
+
+#### 19.5@SentinelResource
+- 注解地址：https://github.com/alibaba/Sentinel/wiki/%E6%B3%A8%E8%A7%A3%E6%94%AF%E6%8C%81
+```java
+//自定义限流
+@SentinelResource(value = "customerBlockHandler",
+        blockHandlerClass = CustomerBlockHandler.class,
+        blockHandler = "handlerException2")
+
+//blockHandlerClass 限流类
+//blockHandler      限流的方法
+```
+
+- Sentinel主要有三个核心Api
+  - sphU定义资源
+  - Tracer定义统计
+  - ContextUtil定义了上下文
+
+#### 19.6服务熔断功能:sentinel整合ribbon+openFeign+fallback
+```java
+//cloudalibaba-provider-payment9003
+//cloudalibaba-provider-payment9004
+//cloudalibaba-consumer-nacos-order84
+
+@RestController
+@Slf4j
+public class CircleBreakerController
+{
+   public static final String SERVICE_URL = "http://nacos-payment-provider";
+
+   @Resource
+   private RestTemplate restTemplate;
+
+   @RequestMapping("/consumer/fallback/{id}")
+//    @SentinelResource(value = "fallback") //没有配置
+//    @SentinelResource(value = "fallback",fallback = "handlerFallback") //fallback只负责业务异常
+//    @SentinelResource(value = "fallback",blockHandler = "blockHandler") //blockHandler只负责sentinel控制台配置违规
+   @SentinelResource(value = "fallback",fallback = "handlerFallback",blockHandler = "blockHandler",
+           exceptionsToIgnore = {IllegalArgumentException.class})
+   public CommonResult<Payment> fallback(@PathVariable Long id)
+   {
+       CommonResult<Payment> result = restTemplate.getForObject(SERVICE_URL + "/paymentSQL/"+id,CommonResult.class,id);
+
+       if (id == 4) {
+           throw new IllegalArgumentException ("IllegalArgumentException,非法参数异常....");
+       }else if (result.getData() == null) {
+           throw new NullPointerException ("NullPointerException,该ID没有对应记录,空指针异常");
+       }
+
+       return result;
+   }
+   //本例是fallback
+   public CommonResult handlerFallback(@PathVariable  Long id,Throwable e) {
+       Payment payment = new Payment(id,"null");
+       return new CommonResult<>(444,"兜底异常handlerFallback,exception内容  "+e.getMessage(),payment);
+   }
+   //本例是blockHandler
+   public CommonResult blockHandler(@PathVariable  Long id,BlockException blockException) {
+       Payment payment = new Payment(id,"null");
+       return new CommonResult<>(445,"blockHandler-sentinel限流,无此流水: blockException  "+blockException.getMessage(),payment);
+   }
+
+   //==================OpenFeign
+   @Resource
+   private PaymentService paymentService;
+
+   @GetMapping(value = "/consumer/paymentSQL/{id}")
+   @SentinelResource(value = "fallback",fallback = "handlerFallback",blockHandler = "blockHandler",
+       exceptionsToIgnore = {IllegalArgumentException.class})
+   public CommonResult<Payment> paymentSQL(@PathVariable("id") Long id)
+   {
+       return paymentService.paymentSQL(id);
+   }
+}
+```
+
+- 解释
+
+- @SentinelResource(value = "fallback") //没有配置
+- @SentinelResource(value = "fallback",fallback = "handlerFallback") //fallback只负责业务异常
+- @SentinelResource(value = "fallback",blockHandler = "blockHandler") //blockHandler只负责sentinel控制台配置违规
+- @SentinelResource(value = "fallback",fallback = "handlerFallback",blockHandler = "blockHandler",
+           exceptionsToIgnore = {IllegalArgumentException.class})
+           
+@FeignClient(value = "nacos-payment-provider",fallback = PaymentFallbackService.class)
+
+1。sentinelResource 的注解 
+- value 是sentinel监控平台上的资源名  
+- fallback是降级 兜底方法，不过fallback只负责业务异常
+- blockHandler是降级 兜底方法，不过blockHandler只负责sentinel控制台配置违规
+
+2。@FeignClient 的注解
+- fallback是调用的时候 如果服务宕机不通的降级
+
+比如通信用的是ribbon 的RestTemplate 的话 如果 调用对方宕机，会走SentinelResource fallback的兜底；如果没配置 则异常
+比如通信用的是feign 的话 如果 调用对方宕机，会走@FeignClient fallback的兜底
+
+
+#### 19.7 持久化：必须写到nacos里边 否者配置不能持久化，发版一次就没了
+
