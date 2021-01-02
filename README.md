@@ -200,6 +200,8 @@ public class MySelfRule
 }
 ```
 #### 6.负载均衡算法: rest接口第几次请求数%服务器集群总数量=实际调用服务器位置下标，每次服务 重启动后rest接口计数从1开始。
+#### 7.ribbon文章
+- [负载均衡Ribbon底层实现](https://blog.csdn.net/hezhezhiyule/article/details/84846578 "负载均衡Ribbon底层实现")
 
 # 9.openfeign
 #### 1.是什么：Feign是一个声明式的Web服务客户端,让编写Web服务客户端变得非常容易,只需  创建一个接口并在接口上添加注解即可
@@ -231,6 +233,22 @@ logging:
   level:
     # feign日志以什么级别监控哪个接口
     com.xialuo.cloud.service: debug
+```
+
+#### 7.feign的一些文章
+- [OpenFeign与Ribbon源码分析总结与面试题](https://juejin.cn/post/6844904200841740302 "OpenFeign与Ribbon源码分析总结与面试题")
+- [Feign实现原理](https://my.oschina.net/wangshuhui/blog/3075874 "Feign实现原理")
+```html
+总结
+总到来说，Feign的源码实现的过程如下：
+
+首先通过@EnableFeignCleints注解开启FeignCleint
+根据Feign的规则实现接口，并加@FeignCleint注解
+程序启动后，会进行包扫描，扫描所有的@ FeignCleint的注解的类，并将这些信息注入到ioc容器中。
+当接口的方法被调用，通过jdk的代理，来生成具体的RequesTemplate
+RequesTemplate在生成Request
+Request交给Client去处理，其中Client可以是HttpUrlConnection、HttpClient也可以是Okhttp
+最后Client被封装到LoadBalanceClient类，这个类结合类Ribbon做到了负载均衡。
 ```
 
 # 10.hystrix

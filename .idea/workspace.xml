@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="7576e0b9-c805-416a-bb5d-8a4e1effb80d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cloudalibaba-provider-payment9003/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/cloudalibaba-provider-payment9003/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cloudalibaba-provider-payment9003/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/cloudalibaba-provider-payment9003/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,7 +30,7 @@
     </option>
   </component>
   <component name="Git.Rebase.Settings">
-    <option name="ONTO" value="0fa886a06d316b8472dd6a5d31b30874c512cf8b" />
+    <option name="ONTO" value="89deebc634d07c04cf99d6fa3596864230218543" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -396,7 +393,8 @@
       <workItem from="1609151683096" duration="15904000" />
       <workItem from="1609231413990" duration="3370000" />
       <workItem from="1609403767738" duration="1639000" />
-      <workItem from="1609405487207" duration="2275000" />
+      <workItem from="1609405487207" duration="2573000" />
+      <workItem from="1609577042521" duration="954000" />
     </task>
     <servers />
   </component>
@@ -581,6 +579,31 @@
             </State>
           </value>
         </entry>
+        <entry key="8">
+          <value>
+            <State>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
             <State>
@@ -599,6 +622,7 @@
         <option value="5" />
         <option value="6" />
         <option value="7" />
+        <option value="8" />
       </set>
     </option>
   </component>
